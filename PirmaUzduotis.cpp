@@ -18,8 +18,30 @@ struct studentas {
 	string pavarde;
 	int* pazymiai;
 	float egzaminas;
-	float galutinis;
+	float galutinis=0;
 };
+
+float galutinis_balas(int* array, int egzaminas) {
+	int suma = 0;
+	int dydis = sizeof(array);
+
+	for (int i = 0; i < dydis; i++) {
+		suma += array[i];
+	}
+
+	float vidurkis = suma / dydis;
+
+	float galutinis = 0.4 * vidurkis + 0.6 * egzaminas;
+
+	return galutinis;
+}
+
+void print_array(int* array) {
+	for (int i = 0; i < sizeof(array); i++) {
+		cout << array[i] << ";";
+	}
+	cout << endl;
+}
 
 int main()
 {
@@ -39,7 +61,7 @@ int main()
 
 		int* temp = new int[100];
 
-		string dab;
+		string dab = "";
 
 		int j = 0;
 		while (dab != "end") {
@@ -47,15 +69,24 @@ int main()
 			if (dab == "end") {
 				break;
 			}
-			temp[j] = std::stoi(dab);
+
+			int value = std::stoi(dab);
+			temp[j] = value;
 			j++;
-		} ;
-
+		};
+		cout << "size of temp: " << sizeof(temp) << endl;
+		print_array(temp);
+		
 		grupe[i].pazymiai = new  int[j];
-
+		//neisspresta problema:
+		//masyve atsiranda papildomas nezinomas skaicius (labai didelis ir daznai su minuso zenklu
+		//kuris gadina galutinio balo skaiciavimus)
 		for (int m = 0; m < j; m++) {
 			grupe[i].pazymiai[m] = temp[m];
+			cout << grupe[i].pazymiai[m];
 		}
+
+		print_array(grupe[i].pazymiai);
 
 		delete[] temp;
 	}
@@ -63,16 +94,22 @@ int main()
 	cout << "Ivesti duomenys: \n";
 	cout << "--------------------------\n";
 	for (int i = 0; i < n; i++) {
-		cout << grupe[i].vardas << " " << grupe[i].pavarde << " " << grupe[i].egzaminas;
+		cout << "Studentas: " << grupe[i].vardas << " " << grupe[i].pavarde << " egzamino ivertinimas: " << grupe[i].egzaminas << endl;
+		cout << "Pazymiai: " << endl;
 
 		int size = sizeof(grupe[i].pazymiai);
-		cout << "array size " << size << endl;
-		for (int k = 0; k < size - 1; k++) {
-			cout << " " << grupe[i].pazymiai[k];
+
+		for (int k = 0; k < size; k++) {
+			cout << grupe[i].pazymiai[k] << " ";
 		}
 		cout << endl;
+		cout << "Galutinis balas: " << galutinis_balas(grupe[i].pazymiai, grupe[i].egzaminas);
+
 		delete[] grupe[i].pazymiai;
 	}
 
 	delete[] grupe;
 }
+
+
+
